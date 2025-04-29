@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import m8.uf3.helpers.GestorAssetsJoc;
 import m8.uf3.utils.Configuracio;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
 
 public class Pilota extends Actor {
     private Vector2 velocitat;
