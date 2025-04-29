@@ -1,6 +1,7 @@
 package m8.uf3.actors;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import m8.uf3.helpers.GestorAssetsJoc;
 import m8.uf3.utils.Configuracio;
@@ -54,4 +55,7 @@ public class Pilota extends Actor {
     public void invertirY() { velocitat.y *= -1; }
     public void invertirX() { velocitat.x *= -1; }
     public boolean estaForaDeLimits() { return getY() + getHeight() < 0; }
+    public Rectangle getBounds() {
+        return new Rectangle(getX(), getY(), getWidth(), getHeight());
+    }
 }

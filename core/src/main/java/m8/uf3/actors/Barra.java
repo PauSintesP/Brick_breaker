@@ -37,4 +37,8 @@ public class Barra extends Actor {
     }
 
     public Rectangle getLimits() { return limits; }
+    @Override
+    public void setX(float x) {
+        super.setX(Math.max(0, Math.min(x, Configuracio.AMPLADA_JO - getWidth())));
+    }
 }
