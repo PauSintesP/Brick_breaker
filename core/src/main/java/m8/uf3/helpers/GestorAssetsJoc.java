@@ -35,9 +35,16 @@ public class GestorAssetsJoc {
             texturaLladres[i] = new TextureRegion(texturaLladreBase, i * 64, 0, 64, 32);
         }
 
-        // Carregar efectes de so
-        soColisio = Gdx.audio.newSound(Gdx.files.internal("sounds/blip.wav"));
-        soDestruccio = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+        // Carregar efectes de so con manejo de errores
+        try {
+            soColisio = Gdx.audio.newSound(Gdx.files.internal("sounds/blip.wav"));
+            soDestruccio = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+        } catch (Exception e) {
+            Gdx.app.log("GestorAssetsJoc", "No se pudieron cargar los archivos de sonido: " + e.getMessage());
+            // Crear sonidos vacíos para evitar NullPointerException
+            soColisio = Gdx.audio.newSound(Gdx.files.internal("paddles_and_balls.png"));
+            soDestruccio = Gdx.audio.newSound(Gdx.files.internal("paddles_and_balls.png"));
+        }
 
         // Configurar filtres
         fullSprites.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

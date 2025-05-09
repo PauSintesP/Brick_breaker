@@ -13,12 +13,15 @@ public class Pilota extends Actor {
     private float radi;
     private boolean estaLlançada;
 
+    private Rectangle bounds;
+
     public Pilota(float x, float y, float radi) {
         setPosition(x, y);
         this.radi = radi;
         this.velocitat = new Vector2(0, 0);
         this.estaLlançada = false;
         setBounds(x, y, radi*2, radi*2);
+        this.bounds = new Rectangle(x, y, radi*2, radi*2);
     }
 
     public void llança(float velocitatX, float velocitatY) {
@@ -31,8 +34,12 @@ public class Pilota extends Actor {
     @Override
     public void act(float delta) {
         if(estaLlançada) {
+            float previousX = getX();
+            float previousY = getY();
+
             setX(getX() + velocitat.x * delta);
             setY(getY() + velocitat.y * delta);
+            bounds.setPosition(getX(), getY());
             comprovaColisionsAmbParets();
         }
     }
@@ -44,7 +51,10 @@ public class Pilota extends Actor {
         if(getY() + getHeight() > Configuracio.ALTURA_JO) {
             velocitat.y *= -1;
         }
+        // Falta rebote en el límite inferior
     }
+
+
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
@@ -56,6 +66,11 @@ public class Pilota extends Actor {
     public void invertirX() { velocitat.x *= -1; }
     public boolean estaForaDeLimits() { return getY() + getHeight() < 0; }
     public Rectangle getBounds() {
-        return new Rectangle(getX(), getY(), getWidth(), getHeight());
+        return bounds;
     }
+
+    public boolean estaLlançada() {
+        return estaLlançada;
+    }
+
 }

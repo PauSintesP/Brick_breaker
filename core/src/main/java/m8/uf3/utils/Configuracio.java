@@ -6,7 +6,7 @@ public class Configuracio {
     public static final float AMPLADA_BARRA = 128;
     public static final float ALTURA_BARRA = 32;
 
-    // Mides del joc
-    public static final float AMPLADA_JO = 480;
-    public static final float ALTURA_JO = 800;
+    // Mides del joc (cambiadas a orientación horizontal)
+    public static final float AMPLADA_JO = 1280;
+    public static final float ALTURA_JO = 720;
 }
