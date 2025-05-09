@@ -22,11 +22,11 @@ public class GestorAssetsJoc {
     public static void carregar() {
         // Carregar fitxers principals
         fullSprites = new Texture(Gdx.files.internal("paddles_and_balls.png"));
-        fons = new Texture(Gdx.files.internal("Backround_Tiles.png"));
+        fons = new Texture(Gdx.files.internal("FondoFinal.png"));
 
         // Configurar elements del joc
-        texturaPilota = new TextureRegion(fullSprites, 0, 0, 32, 32);
-        texturaBarra = new TextureRegion(fullSprites, 35, 0, 128, 32);
+        texturaPilota = new TextureRegion(fullSprites, 175, 50, 16, 16);
+        texturaBarra = new TextureRegion(fullSprites, 35, 70, 64, 16);
 
         // Configurar array de lladres
         Texture texturaLladreBase = new Texture(Gdx.files.internal("bricks.png"));
