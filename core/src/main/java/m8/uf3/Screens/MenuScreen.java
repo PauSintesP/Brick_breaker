@@ -23,16 +23,13 @@ public class MenuScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
-
         camera.update();
         game.getBatch().setProjectionMatrix(camera.combined);
-
         game.getBatch().begin();
         game.getFont().draw(game.getBatch(), "Toca para empezar", 100, 400);
         game.getBatch().end();
-
         if (Gdx.input.isTouched()) {
-            game.setScreen(new GameScreen());
+            game.setScreen(new GameScreen(game));
         }
     }
 
