@@ -37,7 +37,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         stage = new Stage(new FillViewport(Configuracio.AMPLADA_JO, Configuracio.ALTURA_JO, camera));
         Gdx.input.setInputProcessor(stage);
-        barra = new Barra(Configuracio.AMPLADA_JO / 2 - Configuracio.AMPLADA_BARRA / 2, 50);
+        barra = new Barra(Configuracio.AMPLADA_JO / 2 - Configuracio.AMPLADA_BARRA / 2, Configuracio.ALTURA_BARRA);
         stage.addActor(barra);
         pilota = new Pilota(Configuracio.AMPLADA_JO / 2, 100, 16);
         stage.addActor(pilota);
@@ -89,7 +89,7 @@ public class GameScreen implements Screen {
         stage.draw();
 
         stage.getBatch().begin();
-        GestorAssetsJoc.font.draw(stage.getBatch(), score + " punts", Configuracio.AMPLADA_JO - 400, Configuracio.ALTURA_JO - 50);
+        GestorAssetsJoc.font.draw(stage.getBatch(), score + " punts", Configuracio.X_PUNTS_LETRERO, Configuracio.Y_PUNTS_LETRERO);
         stage.getBatch().end();
     }
 
