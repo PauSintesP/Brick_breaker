@@ -27,6 +27,7 @@ public class GameScreen implements Screen {
     private boolean gameOver;
     private boolean allBlocksDestroyed;
     private int score;
+    private int vidas;
 
     public GameScreen(MainGame game) {
         this.game = game;
@@ -46,6 +47,7 @@ public class GameScreen implements Screen {
         gameOver = false;
         allBlocksDestroyed = false;
         score = 0;
+        vidas = 3;
     }
 
     private void crearBloques() {
@@ -70,10 +72,27 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Actualizar lógica del stage
+        stage.act(delta);
+
+        // Dibujar fondo
         stage.getBatch().begin();
         stage.getBatch().draw(GestorAssetsJoc.fons, 0, 0, Configuracio.AMPLADA_JO, Configuracio.ALTURA_JO);
         stage.getBatch().end();
 
+        // Dibujar actores (barra, pelota, bloques)
+        stage.draw();
+
+        // Dibujar UI (puntaje y vidas) con el batch del juego
+        game.getBatch().begin();
+        GestorAssetsJoc.font.getData().setScale(1f);
+        GestorAssetsJoc.font.draw(game.getBatch(), "Punts: " + score,
+            Configuracio.X_PUNTS_LETRERO, Configuracio.Y_PUNTS_LETRERO);
+        GestorAssetsJoc.font.draw(game.getBatch(), "Vides: " + vidas,
+            Configuracio.X_PUNTS_LETRERO, Configuracio.Y_PUNTS_LETRERO - 50);
+        game.getBatch().end();
+
+        // Lanzar pelota al tocar
         if (!pilota.estaLlançada() && Gdx.input.justTouched()) {
             float angle = MathUtils.random(60, 120);
             float velocidadX = 400 * MathUtils.cosDeg(angle);
@@ -84,21 +103,16 @@ public class GameScreen implements Screen {
         if (!gameOver && !allBlocksDestroyed) {
             actualizar(delta);
         }
-
-        stage.act(delta);
-        stage.draw();
-
-        stage.getBatch().begin();
-        GestorAssetsJoc.font.draw(stage.getBatch(), score + " punts", Configuracio.X_PUNTS_LETRERO, Configuracio.Y_PUNTS_LETRERO);
-        stage.getBatch().end();
     }
 
     private void actualizar(float delta) {
+        // Mover barra
         if (Gdx.input.isTouched()) {
             float touchX = Gdx.input.getX() * (Configuracio.AMPLADA_JO / Gdx.graphics.getWidth());
             barra.setX(touchX - barra.getWidth() / 2);
         }
 
+        // Colisión con la barra
         if (pilota.getBounds().overlaps(barra.getLimits())) {
             if (pilota.getVelocitat().y < 0) {
                 float relativeIntersectX = (barra.getX() + (barra.getWidth() / 2)) - (pilota.getX() + pilota.getWidth() / 2);
@@ -107,12 +121,10 @@ public class GameScreen implements Screen {
                 float speed = 400;
                 pilota.getVelocitat().x = speed * MathUtils.sinDeg(bounceAngle);
                 pilota.getVelocitat().y = speed * MathUtils.cosDeg(bounceAngle);
-                try {
-                    GestorAssetsJoc.soColisio.play(0.5f);
-                } catch (Exception e) {}
             }
         }
 
+        // Colisión con bloques
         Iterator<Block> iter = blocks.iterator();
         boolean colisionDetectada = false;
         while (iter.hasNext() && !colisionDetectada) {
@@ -130,15 +142,11 @@ public class GameScreen implements Screen {
                 }
                 block.repColisio();
                 colisionDetectada = true;
-                if (block.estaDestruit()) {
-                    score += 100;
-                }
-                try {
-                    GestorAssetsJoc.soDestruccio.play(0.5f);
-                } catch (Exception e) {}
+                if (block.estaDestruit()) score += 100;
             }
         }
 
+        // Verificar si todos los bloques están destruidos
         boolean todosDestruidos = true;
         for (Block block : blocks) {
             if (!block.estaDestruit()) {
@@ -150,16 +158,20 @@ public class GameScreen implements Screen {
             allBlocksDestroyed = true;
         }
 
+        // Manejar caída de la pelota
         if (pilota.estaForaDeLimits()) {
-            gameOver = true;
-            reiniciarJuego();
+            vidas--;
+            if (vidas <= 0) {
+                game.setScreen(new GameOver(game, score));
+                dispose();
+            } else {
+                gameOver = true;
+                reiniciarJuego();
+            }
         }
     }
 
     private void reiniciarJuego() {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {}
         pilota.remove();
         pilota = new Pilota(Configuracio.AMPLADA_JO / 2, 100, 16);
         stage.addActor(pilota);
@@ -172,7 +184,6 @@ public class GameScreen implements Screen {
         }
         gameOver = false;
         allBlocksDestroyed = false;
-        score = 0;
     }
 
     @Override
