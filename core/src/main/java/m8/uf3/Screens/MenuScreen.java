@@ -2,7 +2,7 @@ package m8.uf3.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 import m8.uf3.MainGame;
@@ -11,11 +11,13 @@ import m8.uf3.utils.Configuracio;
 public class MenuScreen implements Screen {
     private MainGame game;
     private OrthographicCamera camera;
+    private Texture fondo;
 
     public MenuScreen(MainGame game) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Configuracio.AMPLADA_JO, Configuracio.ALTURA_JO);
+        fondo = new Texture("18 may 2025, 21_19_32.png"); // Cargar la imagen
     }
 
     @Override
@@ -23,16 +25,16 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
+        ScreenUtils.clear(0, 0, 0, 1);
         camera.update();
         game.getBatch().setProjectionMatrix(camera.combined);
+
         game.getBatch().begin();
-        game.getFont().getData().setScale(3f);
-        game.getFont().setColor(1, 1, 1, 1);
-        game.getFont().draw(game.getBatch(), "Toca para empezar",
-            Configuracio.AMPLADA_JO/2 - 150,
-            Configuracio.ALTURA_JO/2);
+        // Dibujar la imagen de fondo
+        game.getBatch().draw(fondo, 0, 0, Configuracio.AMPLADA_JO, Configuracio.ALTURA_JO);
+
         game.getBatch().end();
+
         if (Gdx.input.isTouched()) {
             game.setScreen(new GameScreen(game));
         }
@@ -55,5 +57,7 @@ public class MenuScreen implements Screen {
     public void hide() {}
 
     @Override
-    public void dispose() {}
+    public void dispose() {
+        fondo.dispose(); // Liberar la textura
+    }
 }
