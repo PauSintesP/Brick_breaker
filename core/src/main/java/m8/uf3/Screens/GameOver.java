@@ -43,7 +43,7 @@ public class GameOver implements Screen {
 
         GestorAssetsJoc.font.getData().setScale(1.5f);
         GestorAssetsJoc.font.draw(game.getBatch(), "Prem per jugar de nou",
-            Configuracio.AMPLADA_JO/2 - 220,
+            Configuracio.AMPLADA_JO/2 - 210,
             Configuracio.ALTURA_JO/2 - 100);
         game.getBatch().end();
 
