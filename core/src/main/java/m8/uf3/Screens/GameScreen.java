@@ -16,6 +16,8 @@ import m8.uf3.utils.Configuracio;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 
 public class GameScreen implements Screen {
     private MainGame game;
@@ -28,6 +30,9 @@ public class GameScreen implements Screen {
     private boolean allBlocksDestroyed;
     private int score;
     private int vidas;
+    private Music musicaFondo;
+    private Sound sonidoGameOver;
+    private Sound sonidoGolpeBloque;
 
     public GameScreen(MainGame game) {
         this.game = game;
@@ -35,6 +40,14 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("sounds/fondo.mp3"));
+        sonidoGameOver = Gdx.audio.newSound(Gdx.files.internal("sounds/game_over.mp3"));
+        sonidoGolpeBloque = Gdx.audio.newSound(Gdx.files.internal("sounds/golpe-corto-y-suave-44138.mp3"));
+
+        // Configurar música de fondo
+        musicaFondo.setLooping(true);
+        musicaFondo.play();
+
         camera = new OrthographicCamera();
         stage = new Stage(new FillViewport(Configuracio.AMPLADA_JO, Configuracio.ALTURA_JO, camera));
         Gdx.input.setInputProcessor(stage);
@@ -130,6 +143,7 @@ public class GameScreen implements Screen {
         while (iter.hasNext() && !colisionDetectada) {
             Block block = iter.next();
             if (!block.estaDestruit() && pilota.getBounds().overlaps(block.getLimits())) {
+                sonidoGolpeBloque.play();
                 float overlapLeft = pilota.getX() + pilota.getWidth() - block.getX();
                 float overlapRight = block.getX() + block.getWidth() - pilota.getX();
                 float overlapTop = pilota.getY() + pilota.getHeight() - block.getY();
@@ -160,6 +174,7 @@ public class GameScreen implements Screen {
         if (pilota.estaForaDeLimits()) {
             vidas--;
             if (vidas <= 0) {
+                sonidoGameOver.play();
                 game.setScreen(new GameOver(game, score));
                 dispose();
             } else {
@@ -192,6 +207,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+
+        musicaFondo.dispose();
+        sonidoGameOver.dispose();
+        sonidoGolpeBloque.dispose();
         stage.dispose();
     }
 }
