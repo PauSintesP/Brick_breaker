@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 import m8.uf3.MainGame;
+import m8.uf3.utils.Configuracio;
 
 public class MenuScreen implements Screen {
     private MainGame game;
@@ -14,7 +15,7 @@ public class MenuScreen implements Screen {
     public MenuScreen(MainGame game) {
         this.game = game;
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 480, 800);
+        camera.setToOrtho(false, Configuracio.AMPLADA_JO, Configuracio.ALTURA_JO);
     }
 
     @Override
@@ -26,7 +27,11 @@ public class MenuScreen implements Screen {
         camera.update();
         game.getBatch().setProjectionMatrix(camera.combined);
         game.getBatch().begin();
-        game.getFont().draw(game.getBatch(), "Toca para empezar", 100, 400);
+        game.getFont().getData().setScale(3f);
+        game.getFont().setColor(1, 1, 1, 1);
+        game.getFont().draw(game.getBatch(), "Toca para empezar",
+            Configuracio.AMPLADA_JO/2 - 150,
+            Configuracio.ALTURA_JO/2);
         game.getBatch().end();
         if (Gdx.input.isTouched()) {
             game.setScreen(new GameScreen(game));
@@ -34,7 +39,11 @@ public class MenuScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        camera.viewportWidth = Configuracio.AMPLADA_JO;
+        camera.viewportHeight = Configuracio.ALTURA_JO;
+        camera.update();
+    }
 
     @Override
     public void pause() {}

@@ -69,23 +69,28 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         stage.getBatch().begin();
         stage.getBatch().draw(GestorAssetsJoc.fons, 0, 0, Configuracio.AMPLADA_JO, Configuracio.ALTURA_JO);
         stage.getBatch().end();
+
         if (!pilota.estaLlançada() && Gdx.input.justTouched()) {
             float angle = MathUtils.random(60, 120);
             float velocidadX = 400 * MathUtils.cosDeg(angle);
             float velocidadY = 400 * MathUtils.sinDeg(angle);
             pilota.llança(velocidadX, velocidadY);
         }
+
         if (!gameOver && !allBlocksDestroyed) {
             actualizar(delta);
         }
+
         stage.act(delta);
         stage.draw();
-        game.getBatch().begin();
-        game.getFont().draw(game.getBatch(), "Score: " + score, Configuracio.AMPLADA_JO - 200, Configuracio.ALTURA_JO - 20);
-        game.getBatch().end();
+
+        stage.getBatch().begin();
+        GestorAssetsJoc.font.draw(stage.getBatch(), score + " punts", Configuracio.AMPLADA_JO - 400, Configuracio.ALTURA_JO - 50);
+        stage.getBatch().end();
     }
 
     private void actualizar(float delta) {
@@ -93,6 +98,7 @@ public class GameScreen implements Screen {
             float touchX = Gdx.input.getX() * (Configuracio.AMPLADA_JO / Gdx.graphics.getWidth());
             barra.setX(touchX - barra.getWidth() / 2);
         }
+
         if (pilota.getBounds().overlaps(barra.getLimits())) {
             if (pilota.getVelocitat().y < 0) {
                 float relativeIntersectX = (barra.getX() + (barra.getWidth() / 2)) - (pilota.getX() + pilota.getWidth() / 2);
@@ -106,6 +112,7 @@ public class GameScreen implements Screen {
                 } catch (Exception e) {}
             }
         }
+
         Iterator<Block> iter = blocks.iterator();
         boolean colisionDetectada = false;
         while (iter.hasNext() && !colisionDetectada) {
@@ -131,6 +138,7 @@ public class GameScreen implements Screen {
                 } catch (Exception e) {}
             }
         }
+
         boolean todosDestruidos = true;
         for (Block block : blocks) {
             if (!block.estaDestruit()) {
@@ -141,6 +149,7 @@ public class GameScreen implements Screen {
         if (todosDestruidos) {
             allBlocksDestroyed = true;
         }
+
         if (pilota.estaForaDeLimits()) {
             gameOver = true;
             reiniciarJuego();
